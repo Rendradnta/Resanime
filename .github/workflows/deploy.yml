@@ -42,19 +42,4 @@ jobs:
           publish_branch: deploy
           user_name: 'github-actions[bot]'
           user_email: 'github-actions[bot]@users.noreply.github.com'
-          commit_message: ${{ github.event.head_commit.message }}        with:
-          # Token ini otomatis disediakan oleh GitHub
-          github_token: ${{ secrets.GITHUB_TOKEN }}
-          
-          # Folder yang akan di-deploy (hasil dari npm run build)
-          publish_dir: ./build
-          
-          # Nama branch tujuan untuk menyimpan hasil build
-          publish_branch: deploy
-          
-          # Info pengguna untuk commit otomatis oleh bot
-          user_name: 'github-actions[bot]'
-          user_email: 'github-actions[bot]@users.noreply.github.com'
-          
-          # Menggunakan pesan commit yang sama dengan commit asli
           commit_message: ${{ github.event.head_commit.message }}
