@@ -5,7 +5,13 @@ name: Build and Deploy React App
 on:
   push:
     branches:
-      - main # Ganti ke 'master' jika branch utama Anda adalah master
+      - main
+
+# =========================================================
+# === TAMBAHKAN BAGIAN INI UNTUK MEMBERIKAN IZIN TULIS ===
+permissions:
+  contents: write
+# =========================================================
 
 jobs:
   build-and-deploy:
@@ -13,28 +19,30 @@ jobs:
     runs-on: ubuntu-latest
     
     steps:
-      # Langkah 1: Mengunduh kode dari repository Anda ke server virtual
+      # (Sisa dari file Anda tetap sama...)
       - name: Checkout Repository
         uses: actions/checkout@v4
 
-      # Langkah 2: Memasang Node.js di server virtual
       - name: Setup Node.js
         uses: actions/setup-node@v4
         with:
-          node-version: '20' # Sesuaikan dengan versi Node.js yang Anda gunakan
+          node-version: '20'
 
-      # Langkah 3: Menginstall semua dependency dari package.json
       - name: Install Dependencies
         run: npm install
 
-      # Langkah 4: Menjalankan script build dari package.json
       - name: Build React App
         run: npm run build
 
-      # Langkah 5: Mengirim hasil dari folder 'build' ke branch 'deploy'
       - name: Deploy to Deploy Branch
         uses: peaceiris/actions-gh-pages@v4
         with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          publish_dir: ./build
+          publish_branch: deploy
+          user_name: 'github-actions[bot]'
+          user_email: 'github-actions[bot]@users.noreply.github.com'
+          commit_message: ${{ github.event.head_commit.message }}        with:
           # Token ini otomatis disediakan oleh GitHub
           github_token: ${{ secrets.GITHUB_TOKEN }}
           
