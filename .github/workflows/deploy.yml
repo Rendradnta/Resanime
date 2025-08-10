@@ -1,0 +1,52 @@
+# Nama workflow yang akan tampil di tab Actions GitHub
+name: Build and Deploy React App
+
+# Pemicu: Workflow ini akan berjalan setiap kali ada push ke branch 'main'
+on:
+  push:
+    branches:
+      - main # Ganti ke 'master' jika branch utama Anda adalah master
+
+jobs:
+  build-and-deploy:
+    # Menggunakan server virtual Ubuntu terbaru dari GitHub
+    runs-on: ubuntu-latest
+    
+    steps:
+      # Langkah 1: Mengunduh kode dari repository Anda ke server virtual
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      # Langkah 2: Memasang Node.js di server virtual
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20' # Sesuaikan dengan versi Node.js yang Anda gunakan
+
+      # Langkah 3: Menginstall semua dependency dari package.json
+      - name: Install Dependencies
+        run: npm install
+
+      # Langkah 4: Menjalankan script build dari package.json
+      - name: Build React App
+        run: npm run build
+
+      # Langkah 5: Mengirim hasil dari folder 'build' ke branch 'deploy'
+      - name: Deploy to Deploy Branch
+        uses: peaceiris/actions-gh-pages@v4
+        with:
+          # Token ini otomatis disediakan oleh GitHub
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          
+          # Folder yang akan di-deploy (hasil dari npm run build)
+          publish_dir: ./build
+          
+          # Nama branch tujuan untuk menyimpan hasil build
+          publish_branch: deploy
+          
+          # Info pengguna untuk commit otomatis oleh bot
+          user_name: 'github-actions[bot]'
+          user_email: 'github-actions[bot]@users.noreply.github.com'
+          
+          # Menggunakan pesan commit yang sama dengan commit asli
+          commit_message: ${{ github.event.head_commit.message }}
